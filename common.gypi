@@ -4,8 +4,8 @@
     'asan%': 0,
     'werror': '',                     # Turn off -Werror in V8 build.
     'visibility%': 'hidden',          # V8's visibility setting
-    'target_arch%': 'ia32',           # set v8's target architecture
-    'host_arch%': 'ia32',             # set v8's host architecture
+    'target_arch%': 'x64',           # set v8's target architecture
+    'host_arch%': 'x64',             # set v8's host architecture
     'want_separate_host_toolset%': 1, # V8 should not build target and host
     'library%': 'static_library',     # allow override to 'shared_library' for DLL/.so builds
     'component%': 'static_library',   # NB. these names match with what V8 expects
@@ -134,10 +134,17 @@
       ['OS=="linux" and target_arch=="arm" and <(building_nw)==1', {
         'sysroot': '<!(cd <(DEPTH) && pwd -P)/build/linux/debian_sid_arm-sysroot',
       }],
+      ['OS=="linux" and target_arch=="arm64" and <(building_nw)==1', {
+        'sysroot': '<!(cd <(DEPTH) && pwd -P)/build/linux/debian_sid_arm64-sysroot',
+      }],
       ['OS=="mac"', {
         'clang%': 1,
         'obj_dir%': '<(PRODUCT_DIR)/obj.target',
         #'v8_base': '<(PRODUCT_DIR)/libv8_snapshot.a',
+      }],
+      [ 'OS=="linux" and target_arch=="arm64"', {
+        'cflags': [ '--target=aarch64-linux-gnu' ],
+        'ldflags': [ '--target=aarch64-linux-gnu' ],
       }],
       # V8 pointer compression only supports 64bit architectures.
       ['target_arch in "arm ia32 mips mipsel ppc"', {
